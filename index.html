@@ -364,21 +364,21 @@ function buildAreaPlumePoly(lengthM, stabilityKey, bearing) {
     const x_real = frac * lengthM;
     const x_eff = x_real + xv;
     const sy = getSigmaY(x_eff, stabilityKey);
-    // Plume half-width at this downwind distance = 2σ_y (captures ~95% of mass)
-    const halfWidth = Math.min(sy * 2, x_real * 0.8); // cap at 80% of distance
-    const bearing_left  = bearing - (Math.atan2(halfWidth, x_real) * 180 / Math.PI);
-    const bearing_right = bearing + (Math.atan2(halfWidth, x_real) * 180 / Math.PI);
+    // Use 3σ_y to capture wider spread (99.7% of mass)
+    // For a large area fire with thermal turbulence, add a base width of 300m
+    const halfWidth = Math.min(sy * 3 + 300, x_real * 1.2);
+    const bearing_left  = bearing - (Math.atan2(halfWidth, Math.max(x_real,1)) * 180 / Math.PI);
+    const bearing_right = bearing + (Math.atan2(halfWidth, Math.max(x_real,1)) * 180 / Math.PI);
     const dist = Math.sqrt(x_real * x_real + halfWidth * halfWidth);
     pts.push(destPt(FIRE_CENTER[0], FIRE_CENTER[1], bearing_left, Math.max(dist, 1)));
   }
-  // Right edge reverse
   for (let i = N; i >= 0; i--) {
     const frac = i / N;
     const x_real = frac * lengthM;
     const x_eff = x_real + xv;
     const sy = getSigmaY(x_eff, stabilityKey);
-    const halfWidth = Math.min(sy * 2, x_real * 0.8);
-    const bearing_right = bearing + (Math.atan2(halfWidth, x_real) * 180 / Math.PI);
+    const halfWidth = Math.min(sy * 3 + 300, x_real * 1.2);
+    const bearing_right = bearing + (Math.atan2(halfWidth, Math.max(x_real,1)) * 180 / Math.PI);
     const dist = Math.sqrt(x_real * x_real + halfWidth * halfWidth);
     pts.push(destPt(FIRE_CENTER[0], FIRE_CENTER[1], bearing_right, Math.max(dist, 1)));
   }
