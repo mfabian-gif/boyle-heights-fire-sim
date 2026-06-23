@@ -577,12 +577,20 @@ async function fetchWeather(silent){
   if(!silent){btn.classList.add('loading');btn.textContent='⟳ Fetching…';}
   status.className='';status.textContent='';
 
-  const nwsStations=[
-    {id:'KCQT', name:'KCQT Dodger Stadium area', dist:'1.8mi NW'},
-    {id:'KBUR', name:'KBUR Burbank Airport',     dist:'8mi N'},
-    {id:'KLAX', name:'KLAX LAX Airport',          dist:'12mi SW'},
-  ];
+  // ── Primary: Open-Meteo at fire location ─────────────
+  // More reliable than airport ASOS for urban surface wind
+  try{
+    await fetchFromOpenMeteo();
+    if(!silent){const h=forecastHours[0];status.className='ok';status.textContent=`✓ ${h.wsMph}mph from ${bearingToCompass(h.wdDeg)} · open-meteo (grid)`;}
+    btn.classList.remove('loading');btn.textContent='⟳ Live weather';
+    return;
+  }catch(e){console.warn('Open-Meteo failed:',e.message);}
 
+  // ── Fallback: NWS ASOS with tight sanity + staleness ─
+  const nwsStations=[
+    {id:'KCQT', name:'KCQT Dodger Stadium', dist:'1.8mi NW'},
+    {id:'KLAX', name:'KLAX LAX Airport',    dist:'12mi SW'},
+  ];
   for(const st of nwsStations){
     try{
       const resp=await fetch(`https://api.weather.gov/stations/${st.id}/observations/latest`,{headers:{'User-Agent':'BH-FireSim/2.0','Accept':'application/geo+json'}});
@@ -592,31 +600,27 @@ async function fetchWeather(silent){
       const wsMs=props.windSpeed?.value, wdDeg=props.windDirection?.value, wgMs=props.windGust?.value;
       if(wsMs==null||wdDeg==null) throw new Error('no wind data');
       const wsMph=Math.round(wsMs*2.23694);
-      if(wsMph>40||wsMph<0) throw new Error('implausible: '+wsMph);
+      if(wsMph>25||wsMph<0) throw new Error('implausible: '+wsMph+'mph');
       const obsTime=new Date(props.timestamp);
       const minsAgo=Math.round((Date.now()-obsTime)/60000);
-      if(minsAgo>45) throw new Error('stale: '+minsAgo+'min');
+      if(minsAgo>30) throw new Error('stale: '+minsAgo+'min');
       const wgMph=wgMs?Math.round(wgMs*2.23694):null;
-
       forecastHours=[{wsMph,wdDeg,wgMph:wgMph||wsMph,timeLabel:'Now',src:`${st.id} · ${st.dist} · ${minsAgo}min ago`}];
       await fillForecastFromOpenMeteo();
       forecastHours[0]={wsMph,wdDeg,wgMph:wgMph||wsMph,timeLabel:'Now',src:`${st.id} · ${st.dist} · ${minsAgo}min ago`};
       document.getElementById('forecast-row').style.display='';
       document.getElementById('sl-fcast').value=0;
       applyWeatherHour(0);
-      if(!silent){status.className='ok';status.textContent=`✓ ${wsMph}mph from ${bearingToCompass(wdDeg)} · ${st.name} (${minsAgo}min ago)`;}
+      if(!silent){status.className='ok';status.textContent=`✓ ${wsMph}mph from ${bearingToCompass(wdDeg)} · ${st.name}`;}
       btn.classList.remove('loading');btn.textContent='⟳ Live weather';
       return;
     }catch(e){console.warn(st.id+' skipped:',e.message);}
   }
 
-  try{
-    await fetchFromOpenMeteo();
-    if(!silent){const h=forecastHours[0];status.className='ok';status.textContent=`✓ ${h.wsMph}mph from ${bearingToCompass(h.wdDeg)} · open-meteo (model)`;}
-  }catch(e){
-    status.className='err';status.textContent='✗ All weather sources failed';
-    if(silent)document.getElementById('wb-src').textContent='weather unavailable';
-  }finally{btn.classList.remove('loading');btn.textContent='⟳ Live weather';}
+  status.className='err';
+  status.textContent='✗ All weather sources failed';
+  if(silent) document.getElementById('wb-src').textContent='weather unavailable';
+  btn.classList.remove('loading');btn.textContent='⟳ Live weather';
 }
 
 async function fillForecastFromOpenMeteo(){
