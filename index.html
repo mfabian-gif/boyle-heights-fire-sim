@@ -129,7 +129,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
     <div class="sec">Scenario</div>
     <div class="sl-row">
       <label>Wind speed (mph) <span id="lbl-wind">—</span></label>
-      <input type="range" min="1" max="30" value="6" id="sl-wind" oninput="onSlide()">
+      <input type="range" min="1" max="20" value="4" id="sl-wind" oninput="onSlide()">
       <button id="btn-live" onclick="fetchWeather()">⟳ Live weather</button>
       <div id="live-status"></div>
     </div>
@@ -549,7 +549,7 @@ let forecastHours = [];
 function applyWeatherHour(idx){
   if(!forecastHours.length) return;
   const h = forecastHours[Math.min(idx, forecastHours.length-1)];
-  const clamped = Math.min(30, Math.max(1, h.wsMph));
+  const clamped = Math.min(20, Math.max(1, h.wsMph));
   window.LIVE_WIND_BEARING = (h.wdDeg + 180) % 360;
   const cF = bearingToCompass(h.wdDeg), cT = bearingToCompass(window.LIVE_WIND_BEARING);
   const label = idx===0 ? 'Now' : '+'+idx+'h ('+h.timeLabel+')';
@@ -592,7 +592,7 @@ async function fetchWeather(silent){
       const wsMs=props.windSpeed?.value, wdDeg=props.windDirection?.value, wgMs=props.windGust?.value;
       if(wsMs==null||wdDeg==null) throw new Error('no wind data');
       const wsMph=Math.round(wsMs*2.23694);
-      if(wsMph>60||wsMph<0) throw new Error('implausible: '+wsMph);
+      if(wsMph>40||wsMph<0) throw new Error('implausible: '+wsMph);
       const obsTime=new Date(props.timestamp);
       const minsAgo=Math.round((Date.now()-obsTime)/60000);
       if(minsAgo>45) throw new Error('stale: '+minsAgo+'min');
