@@ -451,9 +451,35 @@ function drawPlume(p, stabilityKey) {
 
 function drawAQZone() {
   aqGrp.clearLayers();
-  // Just a label — the plume itself communicates the hazard zones
-  L.marker(destPt(FIRE_CENTER[0],FIRE_CENTER[1],45,8000),{
-    icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,115,0,.85);background:rgba(10,12,15,.78);padding:3px 7px;border:1px solid rgba(255,115,0,.4);border-radius:3px;white-space:nowrap;">⚠ SCAQMD AQ ADVISORY — East LA / Boyle Heights / San Gabriel Valley<br>Stay indoors · close windows · run air purifier · call 311</div>`,iconAnchor:[0,0]}),interactive:false
+
+  // SCAQMD advisory boundary — dashed outline only, no fill, clearly distinct from plume
+  // Covers East LA, Boyle Heights, San Gabriel Valley — roughly NE of fire, ~20mi radius
+  // Represented as a broad arc, not a fan, so it doesn't look like a second plume
+  const advisoryPts = [];
+  // Draw a partial circle arc on the NE side (bearings 0° to 180°, i.e. N through E to S)
+  for (let b = 0; b <= 180; b += 5) {
+    advisoryPts.push(destPt(FIRE_CENTER[0], FIRE_CENTER[1], b, 32000));
+  }
+  // Close with a short arc on the upwind side
+  for (let b = 180; b <= 360; b += 15) {
+    advisoryPts.push(destPt(FIRE_CENTER[0], FIRE_CENTER[1], b, 8000));
+  }
+
+  L.polygon(advisoryPts, {
+    color:'#ff7300', weight:1.5, opacity:.6,
+    fillColor:'transparent', fillOpacity:0,
+    dashArray:'6 5',
+  })
+  .bindTooltip('<b style="color:#ff7300">SCAQMD PARTICLE POLLUTION ADVISORY</b><br>East LA · Boyle Heights · San Gabriel Valley<br>PM2.5: Unhealthy to Very Unhealthy<br>Stay indoors · close windows · run air purifier · ☎ 311', {sticky:true})
+  .addTo(aqGrp);
+
+  // Label
+  L.marker(destPt(FIRE_CENTER[0], FIRE_CENTER[1], 45, 14000), {
+    icon: L.divIcon({
+      className:'',
+      html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,115,0,.85);background:rgba(10,12,15,.78);padding:3px 7px;border:1px solid rgba(255,115,0,.4);border-radius:3px;white-space:nowrap;">⚠ SCAQMD AQ ADVISORY</div>`,
+      iconAnchor:[0,0]
+    }), interactive:false
   }).addTo(aqGrp);
 }
 
