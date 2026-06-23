@@ -451,13 +451,9 @@ function drawPlume(p, stabilityKey) {
 
 function drawAQZone() {
   aqGrp.clearLayers();
-  // SCAQMD advisory covers NE of fire toward East LA and SGV
-  const pts = buildAreaPlumePoly(30000, 'D', 45);
-  L.polygon(pts,{color:'#ff7300',weight:1.5,opacity:.4,fillColor:'#ff7300',fillOpacity:.05,dashArray:'5 5'})
-  .bindTooltip('<b style="color:#ff7300">SCAQMD PARTICLE POLLUTION ADVISORY</b><br>East LA · Boyle Heights · San Gabriel Valley<br>PM2.5: Unhealthy to Very Unhealthy<br>Stay indoors · close windows · run air purifier',{sticky:true})
-  .addTo(aqGrp);
-  L.marker(destPt(FIRE_CENTER[0],FIRE_CENTER[1],45,13000),{
-    icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,115,0,.85);background:rgba(10,12,15,.78);padding:2px 6px;border-radius:2px;white-space:nowrap;">SCAQMD AQ ADVISORY — East LA / SGV</div>`,iconAnchor:[0,0]}),interactive:false
+  // Just a label — the plume itself communicates the hazard zones
+  L.marker(destPt(FIRE_CENTER[0],FIRE_CENTER[1],45,8000),{
+    icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,115,0,.85);background:rgba(10,12,15,.78);padding:3px 7px;border:1px solid rgba(255,115,0,.4);border-radius:3px;white-space:nowrap;">⚠ SCAQMD AQ ADVISORY — East LA / Boyle Heights / San Gabriel Valley<br>Stay indoors · close windows · run air purifier · call 311</div>`,iconAnchor:[0,0]}),interactive:false
   }).addTo(aqGrp);
 }
 
