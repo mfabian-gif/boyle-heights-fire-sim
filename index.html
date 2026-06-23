@@ -423,11 +423,11 @@ function drawPlume(p, stabilityKey) {
   const bearing = (window.LIVE_WIND_BEARING != null) ? window.LIVE_WIND_BEARING : 45;
 
   [
-    {dist:p.haze, col:'#ffee00', op:.18, lbl:'Moderate (AQI 51–100)'},
-    {dist:p.sen,  col:'#ffaa00', op:.26, lbl:'Sensitive Groups (AQI 101–150)'},
-    {dist:p.unh,  col:'#ff6600', op:.38, lbl:'Unhealthy (AQI 151–200)'},
-    {dist:p.vun,  col:'#ff2a00', op:.52, lbl:'Very Unhealthy (AQI 201–300)'},
-    {dist:p.haz,  col:'#cc0000', op:.68, lbl:'Hazardous (AQI 301+)'},
+    {dist:p.haze, col:'#ffee00', op:.13, lbl:'Moderate (AQI 51–100)'},
+    {dist:p.sen,  col:'#ffaa00', op:.18, lbl:'Sensitive Groups (AQI 101–150)'},
+    {dist:p.unh,  col:'#ff6600', op:.27, lbl:'Unhealthy (AQI 151–200)'},
+    {dist:p.vun,  col:'#ff2a00', op:.36, lbl:'Very Unhealthy (AQI 201–300)'},
+    {dist:p.haz,  col:'#cc0000', op:.48, lbl:'Hazardous (AQI 301+)'},
   ].forEach(z => {
     if (z.dist < 10) return;
     L.polygon(buildAreaPlumePoly(z.dist, stabilityKey, bearing), {
