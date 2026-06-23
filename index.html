@@ -160,11 +160,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 
   <div>
     <div class="sec">Smoke legend</div>
-    <div class="leg"><div class="leg-sw" style="background:#7a2000"></div>Hazardous AQI 301+ (immediate danger)</div>
-    <div class="leg"><div class="leg-sw" style="background:#8B3A00"></div>Very Unhealthy AQI 201–300</div>
-    <div class="leg"><div class="leg-sw" style="background:#8B6914"></div>Unhealthy AQI 151–200</div>
-    <div class="leg"><div class="leg-sw" style="background:#b8860b"></div>Unhealthy Sensitive AQI 101–150</div>
-    <div class="leg"><div class="leg-sw" style="background:#d4aa70"></div>Moderate AQI 51–100 (haze)</div>
+    <div class="leg"><div class="leg-sw" style="background:#cc0000"></div>Hazardous AQI 301+ (immediate danger)</div>
+    <div class="leg"><div class="leg-sw" style="background:#ff2a00"></div>Very Unhealthy AQI 201–300</div>
+    <div class="leg"><div class="leg-sw" style="background:#ff6600"></div>Unhealthy AQI 151–200</div>
+    <div class="leg"><div class="leg-sw" style="background:#ffaa00"></div>Unhealthy Sensitive AQI 101–150</div>
+    <div class="leg"><div class="leg-sw" style="background:#ffee00"></div>Moderate AQI 51–100 (haze)</div>
   </div>
 
   <div>
@@ -194,11 +194,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 
 <div id="bottombar">
   <div id="legend-strip">
-    <div class="ls-item"><div class="ls-dot" style="background:#7a2000"></div><div><div class="ls-lbl">Hazardous</div><div class="ls-val c" id="ls-haz">—</div></div></div>
-    <div class="ls-item"><div class="ls-dot" style="background:#8B3A00"></div><div><div class="ls-lbl">V.Unhealthy</div><div class="ls-val c" id="ls-vun">—</div></div></div>
-    <div class="ls-item"><div class="ls-dot" style="background:#8B6914"></div><div><div class="ls-lbl">Unhealthy</div><div class="ls-val w" id="ls-unh">—</div></div></div>
-    <div class="ls-item"><div class="ls-dot" style="background:#b8860b"></div><div><div class="ls-lbl">Sensitive</div><div class="ls-val w" id="ls-sen">—</div></div></div>
-    <div class="ls-item"><div class="ls-dot" style="background:#d4aa70"></div><div><div class="ls-lbl">Haze</div><div class="ls-val" id="ls-haze">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#cc0000"></div><div><div class="ls-lbl">Hazardous</div><div class="ls-val c" id="ls-haz">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#ff2a00"></div><div><div class="ls-lbl">V.Unhealthy</div><div class="ls-val c" id="ls-vun">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#ff6600"></div><div><div class="ls-lbl">Unhealthy</div><div class="ls-val w" id="ls-unh">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#ffaa00"></div><div><div class="ls-lbl">Sensitive</div><div class="ls-val w" id="ls-sen">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#ffee00"></div><div><div class="ls-lbl">Haze</div><div class="ls-val" id="ls-haze">—</div></div></div>
     <div class="ls-item" style="margin-left:4px;border-left:1px solid var(--border);padding-left:6px;"><div class="ls-dot" style="background:#ff7300;opacity:.5;border-radius:50%"></div><div><div class="ls-lbl">AQ Advisory</div><div class="ls-val" style="color:var(--orange)">NE / SGV</div></div></div>
     <div class="ls-item" style="margin-left:4px;border-left:1px solid var(--border);padding-left:6px;"><div class="ls-dot" style="border-radius:50%;background:#00e676"></div><div><div class="ls-lbl">Shelters</div><div class="ls-val" style="color:#00e676">2 open</div></div></div>
     <div class="ls-item" style="margin-left:4px;border-left:1px solid var(--border);padding-left:6px;flex-direction:column;align-items:flex-start;"><div class="ls-lbl" style="color:var(--dim)">INFO</div><div class="ls-val" style="color:#00e676">☎ 311 · lafd.org</div></div>
@@ -446,11 +446,11 @@ function drawPlume(p, stabilityKey) {
   const bearing = (window.LIVE_WIND_BEARING != null) ? window.LIVE_WIND_BEARING : 45;
 
   [
-    {dist:p.haze, col:'#d4aa70', op:.09, lbl:'Moderate (AQI 51–100)'},
-    {dist:p.sen,  col:'#b8860b', op:.16, lbl:'Sensitive Groups (AQI 101–150)'},
-    {dist:p.unh,  col:'#8B6914', op:.26, lbl:'Unhealthy (AQI 151–200)'},
-    {dist:p.vun,  col:'#8B3A00', op:.38, lbl:'Very Unhealthy (AQI 201–300)'},
-    {dist:p.haz,  col:'#7a2000', op:.55, lbl:'Hazardous (AQI 301+)'},
+    {dist:p.haze, col:'#ffee00', op:.18, lbl:'Moderate (AQI 51–100)'},
+    {dist:p.sen,  col:'#ffaa00', op:.26, lbl:'Sensitive Groups (AQI 101–150)'},
+    {dist:p.unh,  col:'#ff6600', op:.38, lbl:'Unhealthy (AQI 151–200)'},
+    {dist:p.vun,  col:'#ff2a00', op:.52, lbl:'Very Unhealthy (AQI 201–300)'},
+    {dist:p.haz,  col:'#cc0000', op:.68, lbl:'Hazardous (AQI 301+)'},
   ].forEach(z => {
     if (z.dist < 10) return;
     L.polygon(buildAreaPlumePoly(z.dist, stabilityKey, bearing), {
