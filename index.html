@@ -10,23 +10,17 @@
 <style>
 :root{
   --red:#ff2a2a;--orange:#ff7300;--yellow:#ffd000;--green:#00e676;
-  --smoke:#8B6914;--amber:#ffaa00;
-  --bg:#0a0c0f;--panel:#111419;--border:#1e2430;--text:#c8d4e8;--dim:#4a5568;--blue:#2a6fff;
+  --amber:#ffaa00;--bg:#0a0c0f;--panel:#111419;--border:#1e2430;
+  --text:#c8d4e8;--dim:#4a5568;--blue:#2a6fff;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
-
 #map{position:fixed;inset:0;z-index:1;}
 .leaflet-tile-pane{filter:brightness(.82) saturate(.65) hue-rotate(185deg) invert(1);}
 .leaflet-container{background:#0e1117!important;}
 .tiles-off .leaflet-tile-pane{display:none;}
 
-#header{
-  position:fixed;top:0;left:0;right:0;height:38px;
-  display:flex;align-items:center;gap:10px;padding:0 12px;
-  background:rgba(10,12,15,.92);border-bottom:1px solid var(--border);
-  z-index:3000;backdrop-filter:blur(6px);
-}
+#header{position:fixed;top:0;left:0;right:0;height:38px;display:flex;align-items:center;gap:10px;padding:0 12px;background:rgba(10,12,15,.92);border-bottom:1px solid var(--border);z-index:3000;backdrop-filter:blur(6px);}
 .alert-dot{width:8px;height:8px;border-radius:50%;background:var(--amber);animation:blink 1.2s infinite;flex-shrink:0;}
 @keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(255,170,0,.6);}50%{box-shadow:0 0 0 5px rgba(255,170,0,0);}}
 #header h1{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.1em;color:#fff;}
@@ -48,16 +42,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .ls-lbl{font-size:.52rem;color:var(--dim);line-height:1.2;}
 .ls-val{font-size:.62rem;color:var(--text);line-height:1.2;}
 .ls-val.w{color:var(--orange);}.ls-val.c{color:var(--red);}
-.bstat{flex:1;display:flex;flex-direction:column;justify-content:center;padding:4px 8px;border-right:1px solid var(--border);line-height:1.4;min-width:0;}
-.bstat:last-child{border-right:none;}
-.bstat .bl{color:var(--dim);font-size:.52rem;white-space:nowrap;}
-.bstat .bv{color:var(--text);font-size:.64rem;white-space:nowrap;}
-.bstat .bv.w{color:var(--orange);}.bstat .bv.c{color:var(--red);}
 
 #windbadge{position:fixed;top:48px;right:9px;background:rgba(10,12,15,.88);border:1px solid var(--border);border-radius:5px;padding:6px 9px;font-family:'Share Tech Mono',monospace;font-size:.6rem;line-height:1.65;z-index:2000;pointer-events:none;}
 #windbadge .wv{color:var(--yellow);}
-
 #statusbadge{position:fixed;top:48px;left:9px;background:rgba(10,12,15,.88);border:1px solid var(--amber);border-radius:5px;padding:6px 9px;font-family:'Share Tech Mono',monospace;font-size:.58rem;line-height:1.65;z-index:2000;pointer-events:none;}
+#modelbadge{position:fixed;top:170px;left:9px;background:rgba(10,12,15,.88);border:1px solid var(--border);border-radius:5px;padding:6px 9px;font-family:'Share Tech Mono',monospace;font-size:.58rem;line-height:1.65;z-index:2000;pointer-events:none;display:none;}
+#modelbadge .mv{color:var(--green);}
 
 .sec{font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:3px;margin-bottom:4px;}
 .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;}
@@ -97,7 +87,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 <div id="header">
   <div class="alert-dot"></div>
   <h1>LINEAGE WAREHOUSE FIRE — SMOKE PLUME SIMULATOR</h1>
-  <div class="sub">1400 S. LOS PALOS ST, BOYLE HEIGHTS, LA &nbsp;|&nbsp; DAY 6 — FIRE ACTIVE &nbsp;|&nbsp; JUNE 22 2026</div>
+  <div class="sub">1400 S. LOS PALOS ST, BOYLE HEIGHTS &nbsp;|&nbsp; DAY 6 ACTIVE &nbsp;|&nbsp; JUN 22 2026</div>
   <button id="menu-btn" onclick="toggleDrawer()">
     <div class="hamburger"><span></span><span></span><span></span></div>
     CONTROLS
@@ -113,21 +103,23 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
     <div class="row"><span class="lbl">Size</span><span class="val">~500,000 sq ft</span></div>
     <div class="row"><span class="lbl">Started</span><span class="val">Jun 17 2:30pm</span></div>
     <div class="row"><span class="lbl">Status</span><span class="val a">Day 6 — active</span></div>
-    <div class="row"><span class="lbl">Hazmat</span><span class="val w">Ammonia + smoke</span></div>
+    <div class="row"><span class="lbl">Hazmat</span><span class="val w">Ammonia (contained)</span></div>
     <div class="row"><span class="lbl">Biohazard</span><span class="val w">85M lbs spoiling food</span></div>
-    <div class="row"><span class="lbl">Emergency</span><span class="val c">State + local declared</span></div>
-    <div class="row"><span class="lbl">SIP orders</span><span class="val">Lifted (advisory remains)</span></div>
+    <div class="row"><span class="lbl">SIP orders</span><span class="val">Lifted — advisory remains</span></div>
+    <div class="row"><span class="lbl">Wind source</span><span class="val" id="s-wsrc">KCQT (1.8mi NW)</span></div>
   </div>
 
   <div>
     <div class="sec">Wind (Live)</div>
     <div class="row"><span class="lbl">Speed</span><span class="val" id="s-wspd">—</span></div>
+    <div class="row"><span class="lbl">Direction</span><span class="val" id="s-wdir">—</span></div>
     <div class="row"><span class="lbl">Plume to</span><span class="val c" id="s-plumedir">—</span></div>
   </div>
 
   <div>
     <div class="sec">Layers</div>
     <div class="tog-row" onclick="tog('basemap')"><span class="tog-label"><span class="dot9" style="background:#4a90d9"></span>Base map</span><div class="sw on" id="sw-basemap"></div></div>
+    <div class="tog-row" onclick="tog('source')"><span class="tog-label"><span class="dot9" style="background:#ff4400"></span>Fire footprint</span><div class="sw on" id="sw-source"></div></div>
     <div class="tog-row" onclick="tog('plume')"><span class="tog-label"><span class="dot9" style="background:#8B6914"></span>Smoke plume</span><div class="sw on" id="sw-plume"></div></div>
     <div class="tog-row" onclick="tog('aqzone')"><span class="tog-label"><span class="dot9" style="background:#ff7300"></span>AQ advisory zone</span><div class="sw on" id="sw-aqzone"></div></div>
     <div class="tog-row" onclick="tog('shelters')"><span class="tog-label"><span class="dot9" style="background:#00e676"></span>Shelters</span><div class="sw on" id="sw-shelters"></div></div>
@@ -137,7 +129,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
     <div class="sec">Scenario</div>
     <div class="sl-row">
       <label>Wind speed (mph) <span id="lbl-wind">—</span></label>
-      <input type="range" min="2" max="40" value="8" id="sl-wind" oninput="onSlide()">
+      <input type="range" min="1" max="30" value="6" id="sl-wind" oninput="onSlide()">
       <button id="btn-live" onclick="fetchWeather()">⟳ Live weather</button>
       <div id="live-status"></div>
     </div>
@@ -150,27 +142,37 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
       <label>Fire intensity <span id="lbl-intensity">Medium</span></label>
       <input type="range" min="1" max="3" value="2" id="sl-intensity" oninput="onSlide()">
     </div>
+    <div class="sl-row">
+      <label>Atm. stability <span id="lbl-stability">D (Neutral)</span></label>
+      <input type="range" min="1" max="6" value="4" id="sl-stability" oninput="onSlide()">
+    </div>
   </div>
 
   <div>
-    <div class="sec">Smoke Legend</div>
-    <div class="leg"><div class="leg-sw" style="background:#8B3A00"></div>Heavy smoke — hazardous (AQI 201+)</div>
-    <div class="leg"><div class="leg-sw" style="background:#8B6914"></div>Moderate smoke — very unhealthy (AQI 151+)</div>
-    <div class="leg"><div class="leg-sw" style="background:#b8860b"></div>Light smoke — unhealthy sensitive groups</div>
-    <div class="leg"><div class="leg-sw" style="background:#d4aa70"></div>Haze — moderate concern</div>
+    <div class="sec">Plume Model</div>
+    <div class="note">Area-source Gaussian with buoyancy lift. 500k sq ft fire footprint treated as distributed line source. Effective release height accounts for thermal rise. Stability class adjustable A–F.</div>
+    <div class="row"><span class="lbl">Model</span><span class="val" style="color:var(--green)">Area-src Gaussian</span></div>
+    <div class="row"><span class="lbl">Source type</span><span class="val">Distributed area</span></div>
+    <div class="row"><span class="lbl">Buoyancy</span><span class="val" style="color:var(--green)">Active (hot smoke)</span></div>
+    <div class="row"><span class="lbl">Eff. height</span><span class="val" id="s-effh">—</span></div>
+    <div class="row"><span class="lbl">Wind station</span><span class="val" style="color:var(--green)">KCQT · 1.8mi NW</span></div>
   </div>
 
   <div>
-    <div class="sec">AQ Advisory Zones</div>
-    <div class="note">SCAQMD advisory: North and east of fire. East LA, Boyle Heights, San Gabriel Valley. Advisory in effect through Mon Jun 22 12:30pm.</div>
-    <div class="leg"><div class="leg-sw" style="background:#ff7300;opacity:.5"></div>SCAQMD advisory area</div>
+    <div class="sec">Smoke legend</div>
+    <div class="leg"><div class="leg-sw" style="background:#7a2000"></div>Hazardous AQI 301+ (immediate danger)</div>
+    <div class="leg"><div class="leg-sw" style="background:#8B3A00"></div>Very Unhealthy AQI 201–300</div>
+    <div class="leg"><div class="leg-sw" style="background:#8B6914"></div>Unhealthy AQI 151–200</div>
+    <div class="leg"><div class="leg-sw" style="background:#b8860b"></div>Unhealthy Sensitive AQI 101–150</div>
+    <div class="leg"><div class="leg-sw" style="background:#d4aa70"></div>Moderate AQI 51–100 (haze)</div>
   </div>
 
   <div>
-    <div class="sec">Distances</div>
-    <div class="row"><span class="lbl">Heavy smoke</span><span class="val c" id="d-heavy">—</span></div>
-    <div class="row"><span class="lbl">Mod. smoke</span><span class="val w" id="d-mod">—</span></div>
-    <div class="row"><span class="lbl">Light smoke</span><span class="val w" id="d-light">—</span></div>
+    <div class="sec">Distances (centerline)</div>
+    <div class="row"><span class="lbl">Hazardous</span><span class="val c" id="d-haz">—</span></div>
+    <div class="row"><span class="lbl">V.Unhealthy</span><span class="val c" id="d-vun">—</span></div>
+    <div class="row"><span class="lbl">Unhealthy</span><span class="val w" id="d-unh">—</span></div>
+    <div class="row"><span class="lbl">Sensitive</span><span class="val w" id="d-sen">—</span></div>
     <div class="row"><span class="lbl">Haze extent</span><span class="val" id="d-haze">—</span></div>
   </div>
 </div>
@@ -184,66 +186,61 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 
 <div id="statusbadge">
   <span style="color:var(--amber)">🔥 DAY 6 — FIRE ACTIVE</span><br>
-  <span style="color:var(--dim)">Ammonia line: </span><span style="color:var(--green)">contained</span><br>
-  <span style="color:var(--dim)">Explosion risk: </span><span style="color:var(--green)">low</span><br>
+  <span style="color:var(--dim)">Ammonia: </span><span style="color:var(--green)">contained</span><br>
   <span style="color:var(--dim)">SIP orders: </span><span style="color:var(--green)">lifted</span><br>
-  <span style="color:var(--amber)">Smoke advisory: ACTIVE</span>
+  <span style="color:var(--amber)">AQ advisory: ACTIVE</span><br>
+  <span style="color:var(--dim)">State emergency: </span><span style="color:var(--red)">DECLARED</span>
 </div>
 
 <div id="bottombar">
   <div id="legend-strip">
-    <div class="ls-item"><div class="ls-dot" style="background:#8B3A00"></div><div><div class="ls-lbl">Hazardous</div><div class="ls-val c" id="ls-heavy">—</div></div></div>
-    <div class="ls-item"><div class="ls-dot" style="background:#8B6914"></div><div><div class="ls-lbl">V.Unhealthy</div><div class="ls-val w" id="ls-mod">—</div></div></div>
-    <div class="ls-item"><div class="ls-dot" style="background:#b8860b"></div><div><div class="ls-lbl">Unhealthy</div><div class="ls-val w" id="ls-light">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#7a2000"></div><div><div class="ls-lbl">Hazardous</div><div class="ls-val c" id="ls-haz">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#8B3A00"></div><div><div class="ls-lbl">V.Unhealthy</div><div class="ls-val c" id="ls-vun">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#8B6914"></div><div><div class="ls-lbl">Unhealthy</div><div class="ls-val w" id="ls-unh">—</div></div></div>
+    <div class="ls-item"><div class="ls-dot" style="background:#b8860b"></div><div><div class="ls-lbl">Sensitive</div><div class="ls-val w" id="ls-sen">—</div></div></div>
     <div class="ls-item"><div class="ls-dot" style="background:#d4aa70"></div><div><div class="ls-lbl">Haze</div><div class="ls-val" id="ls-haze">—</div></div></div>
-    <div class="ls-item" style="margin-left:4px;border-left:1px solid var(--border);padding-left:6px;"><div class="ls-dot" style="background:#ff7300;opacity:.5;border-radius:50%"></div><div><div class="ls-lbl">AQ Advisory</div><div class="ls-val" style="color:var(--orange)">E.LA / SGV</div></div></div>
+    <div class="ls-item" style="margin-left:4px;border-left:1px solid var(--border);padding-left:6px;"><div class="ls-dot" style="background:#ff7300;opacity:.5;border-radius:50%"></div><div><div class="ls-lbl">AQ Advisory</div><div class="ls-val" style="color:var(--orange)">NE / SGV</div></div></div>
     <div class="ls-item" style="margin-left:4px;border-left:1px solid var(--border);padding-left:6px;"><div class="ls-dot" style="border-radius:50%;background:#00e676"></div><div><div class="ls-lbl">Shelters</div><div class="ls-val" style="color:#00e676">2 open</div></div></div>
-    <div class="ls-item" style="margin-left:4px;border-left:1px solid var(--border);padding-left:6px;flex-direction:column;align-items:flex-start;"><div class="ls-lbl" style="color:var(--dim)">LAFD INFO</div><div class="ls-val" style="color:#00e676">☎ 311 · lafd.org</div></div>
+    <div class="ls-item" style="margin-left:4px;border-left:1px solid var(--border);padding-left:6px;flex-direction:column;align-items:flex-start;"><div class="ls-lbl" style="color:var(--dim)">INFO</div><div class="ls-val" style="color:#00e676">☎ 311 · lafd.org</div></div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════
-// FIRE LOCATION — 1400 block S. Los Palos St
-// ═══════════════════════════════════════════
-const FIRE = [34.0305, -118.2108];
-const WIND_BEARING_DEFAULT = 45; // NE — matches reported smoke drift
+// ═══════════════════════════════════════════════════
+// FIRE GEOMETRY
+// Lineage warehouse: ~700ft × 700ft (500k sq ft)
+// Center: 34.0305°N, -118.2108°W
+// ═══════════════════════════════════════════════════
+const FIRE_CENTER = [34.0305, -118.2108];
+// Warehouse corners (approximate, ~700ft each side = ~213m)
+const HALF_W = 213; // metres
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // MAP
-// ═══════════════════════════════════════════
-const map = L.map('map',{center:[34.040,-118.195],zoom:12,zoomControl:true});
+// ═══════════════════════════════════════════════════
+const map = L.map('map',{center:[34.040,-118.200],zoom:12,zoomControl:true});
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:19}).addTo(map);
 
-// Fire marker
-const fireIcon = L.divIcon({
-  className:'',
-  html:`<div style="width:16px;height:16px;border-radius:50%;border:2px solid #ffaa00;background:rgba(255,170,0,.4);box-shadow:0 0 12px #ff6600;animation:firepulse 1s infinite;"></div>
-  <style>@keyframes firepulse{0%,100%{box-shadow:0 0 8px #ff6600;}50%{box-shadow:0 0 20px #ff6600;}}</style>`,
-  iconSize:[16,16],iconAnchor:[8,8]
-});
-L.marker(FIRE,{icon:fireIcon,zIndexOffset:1000}).addTo(map)
- .bindPopup(`<b style="color:#ffaa00">🔥 LINEAGE COLD STORAGE FIRE</b><br>1400 S. Los Palos St, Boyle Heights<br><span style="color:#ff7300">~500,000 sq ft facility — Day 6</span><br>Hazmat: Ammonia (contained) + smoke<br>85M lbs spoiling food — biohazard`);
-
+const sourceGrp=L.layerGroup().addTo(map);
 const plumeGrp=L.layerGroup().addTo(map);
 const aqGrp=L.layerGroup().addTo(map);
 const shelterGrp=L.layerGroup().addTo(map);
-const state={basemap:true,plume:true,aqzone:true,shelters:true};
+const state={basemap:true,source:true,plume:true,aqzone:true,shelters:true};
 
 function tog(name){
   state[name]=!state[name];
   document.getElementById('sw-'+name).classList.toggle('on',state[name]);
   if(name==='basemap'){map.getContainer().classList.toggle('tiles-off',!state[name]);return;}
-  const grp=name==='plume'?plumeGrp:name==='aqzone'?aqGrp:shelterGrp;
+  const grp=name==='source'?sourceGrp:name==='plume'?plumeGrp:name==='aqzone'?aqGrp:shelterGrp;
   if(state[name])map.addLayer(grp);else map.removeLayer(grp);
 }
 
 function toggleDrawer(){document.getElementById('drawer').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // GEODESIC
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function destPt(lat,lng,bearing,dist){
   const R=6371000,b=bearing*Math.PI/180,φ1=lat*Math.PI/180,λ1=lng*Math.PI/180;
   const φ2=Math.asin(Math.sin(φ1)*Math.cos(dist/R)+Math.cos(φ1)*Math.sin(dist/R)*Math.cos(b));
@@ -251,174 +248,329 @@ function destPt(lat,lng,bearing,dist){
   return [φ2*180/Math.PI,λ2*180/Math.PI];
 }
 
-function buildPlumePoly(lengthM,halfAngleDeg,bearing){
-  const pts=[],N=48;
-  for(let i=0;i<=N;i++){const f=i/N,d=f*lengthM,s=halfAngleDeg*f;pts.push(destPt(FIRE[0],FIRE[1],bearing-s,Math.max(d,1)));}
-  for(let i=N;i>=0;i--){const f=i/N,d=f*lengthM,s=halfAngleDeg*f;pts.push(destPt(FIRE[0],FIRE[1],bearing+s,Math.max(d,1)));}
-  return pts;
+// ═══════════════════════════════════════════════════
+// AREA SOURCE GAUSSIAN PLUME MODEL
+//
+// For a large area fire, we treat the source as a
+// distributed line source perpendicular to wind direction,
+// with effective width = warehouse cross-section width.
+//
+// The area-source virtual distance (x_virtual) allows us
+// to use point-source Gaussian equations while correctly
+// reproducing the wider initial plume width.
+//
+// Buoyancy: hot smoke rises before dispersing.
+// Effective release height (He) = physical stack height (0)
+//   + buoyant rise (ΔH) from heat flux of fire.
+//
+// For a structure fire:
+//   Heat release rate Q_H ~ 30-100 MW/m2 × area
+//   Briggs buoyancy flux: Fb = g * Q_H / (π * ρ_air * Cp * T_air)
+//   Buoyant rise: ΔH = 1.6 * Fb^0.25 * u^-0.75 * x^0.75 (neutral)
+//   We use the final rise formula: ΔH = 1.6 * Fb^0.25 / u * x_final^0.75
+//
+// Pasquill-Gifford σ_y, σ_z for stability classes A-F
+// ═══════════════════════════════════════════════════
+
+// PG σ coefficients by stability class
+// σ_y = a * x ^ b  (x in metres)
+// σ_z = c * x ^ d  (x in metres, capped at 5000m)
+const PG = {
+  A: {ay:0.22, by:0.897, cz:0.20, dz:0.897},  // Very unstable
+  B: {ay:0.16, by:0.897, cz:0.12, dz:0.897},  // Unstable
+  C: {ay:0.11, by:0.897, cz:0.08, dz:0.897},  // Slightly unstable
+  D: {ay:0.08, by:0.897, cz:0.06, dz:0.897},  // Neutral
+  E: {ay:0.06, by:0.897, cz:0.03, dz:0.897},  // Slightly stable
+  F: {ay:0.04, by:0.897, cz:0.016,dz:0.897},  // Stable
+};
+const STABILITY_LABELS = ['A (Very Unstable)','B (Unstable)','C (Sl. Unstable)','D (Neutral)','E (Sl. Stable)','F (Stable)'];
+const STABILITY_KEYS   = ['A','B','C','D','E','F'];
+
+function getSigmas(x_m, stabilityKey) {
+  const p = PG[stabilityKey];
+  const sy = p.ay * Math.pow(x_m, p.by);
+  const sz = Math.min(p.cz * Math.pow(x_m, p.dz), 5000);
+  return {sy, sz};
 }
 
-// ═══════════════════════════════════════════
-// SMOKE PLUME MODEL
-// Smoke from structure fire — PM2.5 based
-// Intensity multiplier: 1=low, 2=med, 3=high
-// Wind disperses plume: faster wind = shorter dense zone, longer light zone
-// ═══════════════════════════════════════════
-function calcSmokePlume(windMph, intensity){
-  // Base distances at medium intensity, 8 mph wind (metres)
-  // Heavy smoke (AQI 201+): ~0.5mi
-  // Very unhealthy (AQI 151+): ~1.5mi
-  // Unhealthy sensitive (AQI 101+): ~3mi
-  // Haze/moderate: ~6mi
-  const baseHeavy  = 800;
-  const baseMod    = 2400;
-  const baseLight  = 4800;
-  const baseHaze   = 9600;
-
-  // Wind correction: higher wind = longer dispersion range but lower peak conc near source
-  // Smoke rises and disperses faster with wind
-  const windFactor = Math.pow(8 / Math.max(windMph, 1), 0.3);
-
-  // Intensity multiplier
-  const intMult = intensity === 1 ? 0.6 : intensity === 3 ? 1.6 : 1.0;
-
-  return {
-    heavy: baseHeavy  * intMult * windFactor,
-    mod:   baseMod    * intMult * (1 / windFactor) * 0.7, // wind pushes smoke further
-    light: baseLight  * intMult * (1 / windFactor) * 0.8,
-    haze:  baseHaze   * intMult * (1 / windFactor) * 0.9,
-  };
+// Virtual source distance for area source
+// x_virtual: distance at which σ_y equals half the warehouse width
+// Solve: σ_y(x_v) = HALF_W  →  x_v = (HALF_W / ay)^(1/by)
+function getVirtualDist(stabilityKey) {
+  const p = PG[stabilityKey];
+  return Math.pow(HALF_W / p.ay, 1 / p.by);
 }
 
-// ═══════════════════════════════════════════
-// DRAW
-// ═══════════════════════════════════════════
-function drawPlume(p){
-  plumeGrp.clearLayers();
-  const bearing=(window.LIVE_WIND_BEARING!=null)?window.LIVE_WIND_BEARING:WIND_BEARING_DEFAULT;
-
-  // Draw from outermost to innermost so inner zones show on top
-  [
-    {dist:p.haze,  ang:30, col:'#d4aa70', op:.10, lbl:'Haze (AQI Moderate)'},
-    {dist:p.light, ang:25, col:'#b8860b', op:.18, lbl:'Unhealthy — Sensitive Groups'},
-    {dist:p.mod,   ang:20, col:'#8B6914', op:.28, lbl:'Very Unhealthy (AQI 151+)'},
-    {dist:p.heavy, ang:14, col:'#8B3A00', op:.50, lbl:'Hazardous (AQI 201+)'},
-  ].forEach(z=>{
-    L.polygon(buildPlumePoly(z.dist,z.ang,bearing),{
-      color:z.col,weight:1,opacity:.6,fillColor:z.col,fillOpacity:z.op
-    })
-    .bindTooltip(`<b style="color:${z.col}">${z.lbl}</b><br>${miStr(z.dist)} downwind`,{sticky:true})
-    .addTo(plumeGrp);
-
-    const tip=destPt(FIRE[0],FIRE[1],bearing,z.dist);
-    L.marker(tip,{icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:${z.col};background:rgba(10,12,15,.82);padding:2px 4px;border:1px solid ${z.col}55;border-radius:3px;white-space:nowrap;pointer-events:none;">${z.lbl.split('(')[0].trim()} · ${miStr(z.dist)}</div>`,iconAnchor:[0,0]}),interactive:false}).addTo(plumeGrp);
-  });
-
-  // Wind arrows
-  for(let d=500;d<p.mod;d+=800){
-    const pt=destPt(FIRE[0],FIRE[1],bearing,d);
-    L.marker(pt,{icon:L.divIcon({className:'',html:`<div style="color:rgba(200,212,232,.4);font-size:12px;transform:rotate(${bearing}deg);line-height:1;">➤</div>`,iconSize:[12,12],iconAnchor:[6,6]}),interactive:false}).addTo(plumeGrp);
+// Buoyant rise (Briggs 1975)
+// For structure fire: heat release ~30 kW/m2 × 500,000 sq ft = 1,394 m2 × 30,000 kW = ~42 GW
+// We scale by intensity: low=0.4, med=1.0, high=2.0
+function getBuoyantRise(windMph, intensity, x_m) {
+  const u = Math.max(windMph * 0.44704, 0.5); // m/s
+  const baseHeat_MW = 42000; // MW at medium intensity
+  const intScale = intensity === 1 ? 0.3 : intensity === 3 ? 2.0 : 1.0;
+  const Q_H = baseHeat_MW * intScale * 1e6; // watts
+  const rho = 1.2, Cp = 1005, T_air = 293, g = 9.81;
+  const Fb = g * Q_H / (Math.PI * rho * Cp * T_air); // buoyancy flux (m4/s3)
+  // Neutral stability: ΔH = 1.6 * Fb^(1/4) * u^(-3/4) * x^(3/4)
+  // x_final when plume reaches equilibrium: x_f = 120 * Fb^0.4 (for unstable)
+  const x_f = Math.min(120 * Math.pow(Fb, 0.4), 5000);
+  if (x_m >= x_f) {
+    // Final rise
+    return 1.6 * Math.pow(Fb, 0.25) * Math.pow(u, -0.75) * Math.pow(x_f, 0.75);
+  } else {
+    return 1.6 * Math.pow(Fb, 0.25) * Math.pow(u, -0.75) * Math.pow(x_m, 0.75);
   }
 }
 
-function drawAQZone(){
-  aqGrp.clearLayers();
-  // SCAQMD advisory zone: North and East of fire — covers East LA, Boyle Heights, San Gabriel Valley
-  // Rough bounds: covers area NE of fire out to ~15 miles
-  const advisoryPts = buildPlumePoly(24000, 60, 45); // broad NE fan, 15 miles
-  L.polygon(advisoryPts,{
-    color:'#ff7300',weight:1.5,opacity:.5,fillColor:'#ff7300',fillOpacity:.06,dashArray:'5 5'
-  })
-  .bindTooltip('<b style="color:#ff7300">SCAQMD PARTICLE POLLUTION ADVISORY</b><br>East LA · Boyle Heights · San Gabriel Valley<br>AQI: Unhealthy to Very Unhealthy<br>Stay indoors, close windows, run air purifiers',{sticky:true})
-  .addTo(aqGrp);
+// Ground-level centreline concentration (g/m3)
+// Modified Gaussian with effective height He and area-source virtual distance
+function concentration(x_real, windMph, intensity, stabilityKey) {
+  const u = Math.max(windMph * 0.44704, 0.5);
+  const xv = getVirtualDist(stabilityKey);
+  const x_eff = x_real + xv; // effective downwind distance from virtual source
 
-  L.marker(destPt(FIRE[0],FIRE[1],45,12000),{
-    icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,115,0,.85);background:rgba(10,12,15,.78);padding:2px 6px;border-radius:2px;white-space:nowrap;">SCAQMD AQ ADVISORY · N+E of fire · SGV / East LA</div>`,iconAnchor:[0,0]}),interactive:false
+  const {sy, sz} = getSigmas(x_eff, stabilityKey);
+  const He = getBuoyantRise(windMph, intensity, x_real); // effective release height
+
+  // PM2.5 emission rate: assume 50 g/s per MW of fire (Mulholland & Croarkin)
+  const intScale = intensity === 1 ? 0.3 : intensity === 3 ? 2.0 : 1.0;
+  const Q_fire_MW = 42000 * intScale;
+  const Q_pm25 = Q_fire_MW * 50; // g/s total PM2.5
+
+  // Gaussian with ground reflection
+  const C = (Q_pm25 / (2 * Math.PI * sy * sz * u)) *
+            Math.exp(-0.5 * Math.pow(He / sz, 2)) *
+            2; // ground reflection factor
+
+  return C;
+}
+
+// Binary search for downwind distance at given PM2.5 threshold
+function findDownwind(target_ugm3, windMph, intensity, stabilityKey) {
+  const target_gm3 = target_ugm3 * 1e-6;
+  let lo = 10, hi = 200000;
+  for (let i = 0; i < 70; i++) {
+    const mid = (lo + hi) / 2;
+    concentration(mid, windMph, intensity, stabilityKey) > target_gm3 ? lo = mid : hi = mid;
+  }
+  return lo;
+}
+
+// EPA AQI PM2.5 breakpoints (µg/m3, 24h avg — we use instantaneous peak as proxy)
+// AQI 301 (Hazardous+): 250.5 µg/m3
+// AQI 201 (V.Unhealthy): 150.5 µg/m3
+// AQI 151 (Unhealthy):   55.5 µg/m3
+// AQI 101 (Sensitive):   35.5 µg/m3
+// AQI 51  (Moderate):    12.1 µg/m3
+
+function calcPlume(windMph, intensity, stabilityKey) {
+  return {
+    haz:  findDownwind(250.5, windMph, intensity, stabilityKey),
+    vun:  findDownwind(150.5, windMph, intensity, stabilityKey),
+    unh:  findDownwind(55.5,  windMph, intensity, stabilityKey),
+    sen:  findDownwind(35.5,  windMph, intensity, stabilityKey),
+    haze: findDownwind(12.1,  windMph, intensity, stabilityKey),
+    He:   getBuoyantRise(windMph, intensity, 1000),
+  };
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD POLYGON — fan from area source
+// Width at distance x proportional to σ_y, not just angle
+// ═══════════════════════════════════════════════════
+function buildAreaPlumePoly(lengthM, stabilityKey, bearing) {
+  const pts = [], N = 48;
+  const xv = getVirtualDist(stabilityKey);
+
+  for (let i = 0; i <= N; i++) {
+    const frac = i / N;
+    const x_real = frac * lengthM;
+    const x_eff = x_real + xv;
+    const {sy} = getSigmas(x_eff, stabilityKey);
+    // Plume half-width at this downwind distance = 2σ_y (captures ~95% of mass)
+    const halfWidth = Math.min(sy * 2, x_real * 0.8); // cap at 80% of distance
+    const bearing_left  = bearing - (Math.atan2(halfWidth, x_real) * 180 / Math.PI);
+    const bearing_right = bearing + (Math.atan2(halfWidth, x_real) * 180 / Math.PI);
+    const dist = Math.sqrt(x_real * x_real + halfWidth * halfWidth);
+    pts.push(destPt(FIRE_CENTER[0], FIRE_CENTER[1], bearing_left, Math.max(dist, 1)));
+  }
+  // Right edge reverse
+  for (let i = N; i >= 0; i--) {
+    const frac = i / N;
+    const x_real = frac * lengthM;
+    const x_eff = x_real + xv;
+    const {sy} = getSigmas(x_eff, stabilityKey);
+    const halfWidth = Math.min(sy * 2, x_real * 0.8);
+    const bearing_right = bearing + (Math.atan2(halfWidth, x_real) * 180 / Math.PI);
+    const dist = Math.sqrt(x_real * x_real + halfWidth * halfWidth);
+    pts.push(destPt(FIRE_CENTER[0], FIRE_CENTER[1], bearing_right, Math.max(dist, 1)));
+  }
+  return pts;
+}
+
+// ═══════════════════════════════════════════════════
+// DRAW FIRE FOOTPRINT (area source)
+// ═══════════════════════════════════════════════════
+function drawFireSource() {
+  sourceGrp.clearLayers();
+  // Warehouse rectangle ~213m × 213m centered on FIRE_CENTER
+  const corners = [
+    destPt(FIRE_CENTER[0],FIRE_CENTER[1], 315, HALF_W * Math.SQRT2), // NW
+    destPt(FIRE_CENTER[0],FIRE_CENTER[1],  45, HALF_W * Math.SQRT2), // NE
+    destPt(FIRE_CENTER[0],FIRE_CENTER[1], 135, HALF_W * Math.SQRT2), // SE
+    destPt(FIRE_CENTER[0],FIRE_CENTER[1], 225, HALF_W * Math.SQRT2), // SW
+  ];
+  // Pulsing fire rectangle
+  L.polygon(corners,{
+    color:'#ff6600',weight:2,opacity:.9,
+    fillColor:'#ff4400',fillOpacity:.35,
+  })
+  .bindPopup(`<b style="color:#ffaa00">🔥 LINEAGE COLD STORAGE — FIRE FOOTPRINT</b><br>~500,000 sq ft (213m × 213m)<br>1400 S. Los Palos St, Boyle Heights<br>Day 6 — still active<br>Ammonia: contained · Biohazard: active`)
+  .addTo(sourceGrp);
+
+  // Center marker
+  const fireIcon = L.divIcon({
+    className:'',
+    html:`<div style="width:12px;height:12px;border-radius:50%;border:2px solid #ff6600;background:rgba(255,100,0,.5);box-shadow:0 0 12px #ff6600;"></div>`,
+    iconSize:[12,12],iconAnchor:[6,6]
+  });
+  L.marker(FIRE_CENTER,{icon:fireIcon,zIndexOffset:1000}).addTo(sourceGrp);
+  L.marker(FIRE_CENTER,{icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#ff9900;background:rgba(10,12,15,.82);padding:2px 5px;border-radius:2px;white-space:nowrap;margin-left:10px;">🔥 LINEAGE FIRE · ~500,000 sq ft</div>`,iconAnchor:[-2,6]}),interactive:false}).addTo(sourceGrp);
+}
+
+// ═══════════════════════════════════════════════════
+// DRAW SMOKE PLUME
+// ═══════════════════════════════════════════════════
+function drawPlume(p, stabilityKey) {
+  plumeGrp.clearLayers();
+  const bearing = (window.LIVE_WIND_BEARING != null) ? window.LIVE_WIND_BEARING : 45;
+
+  [
+    {dist:p.haze, col:'#d4aa70', op:.09, lbl:'Moderate (AQI 51–100)'},
+    {dist:p.sen,  col:'#b8860b', op:.16, lbl:'Sensitive Groups (AQI 101–150)'},
+    {dist:p.unh,  col:'#8B6914', op:.26, lbl:'Unhealthy (AQI 151–200)'},
+    {dist:p.vun,  col:'#8B3A00', op:.38, lbl:'Very Unhealthy (AQI 201–300)'},
+    {dist:p.haz,  col:'#7a2000', op:.55, lbl:'Hazardous (AQI 301+)'},
+  ].forEach(z => {
+    if (z.dist < 10) return;
+    L.polygon(buildAreaPlumePoly(z.dist, stabilityKey, bearing), {
+      color:z.col, weight:1, opacity:.6, fillColor:z.col, fillOpacity:z.op
+    })
+    .bindTooltip(`<b style="color:${z.col}">${z.lbl}</b><br>Centerline: ${miStr(z.dist)}<br>Area-source Gaussian · He=${Math.round(p.He)}m`, {sticky:true})
+    .addTo(plumeGrp);
+
+    const tip = destPt(FIRE_CENTER[0], FIRE_CENTER[1], bearing, z.dist);
+    L.marker(tip, {
+      icon: L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:${z.col};background:rgba(10,12,15,.82);padding:2px 4px;border:1px solid ${z.col}55;border-radius:3px;white-space:nowrap;pointer-events:none;">${z.lbl.split('(')[0].trim()} · ${miStr(z.dist)}</div>`,iconAnchor:[0,0]}),interactive:false
+    }).addTo(plumeGrp);
+  });
+
+  // Wind arrows
+  for (let d = 800; d < p.sen; d += 1200) {
+    const pt = destPt(FIRE_CENTER[0], FIRE_CENTER[1], bearing, d);
+    L.marker(pt, {icon:L.divIcon({className:'',html:`<div style="color:rgba(200,212,232,.4);font-size:12px;transform:rotate(${bearing}deg);line-height:1;">➤</div>`,iconSize:[12,12],iconAnchor:[6,6]}),interactive:false}).addTo(plumeGrp);
+  }
+}
+
+function drawAQZone() {
+  aqGrp.clearLayers();
+  // SCAQMD advisory covers NE of fire toward East LA and SGV
+  const pts = buildAreaPlumePoly(30000, 'D', 45);
+  L.polygon(pts,{color:'#ff7300',weight:1.5,opacity:.4,fillColor:'#ff7300',fillOpacity:.05,dashArray:'5 5'})
+  .bindTooltip('<b style="color:#ff7300">SCAQMD PARTICLE POLLUTION ADVISORY</b><br>East LA · Boyle Heights · San Gabriel Valley<br>PM2.5: Unhealthy to Very Unhealthy<br>Stay indoors · close windows · run air purifier',{sticky:true})
+  .addTo(aqGrp);
+  L.marker(destPt(FIRE_CENTER[0],FIRE_CENTER[1],45,13000),{
+    icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,115,0,.85);background:rgba(10,12,15,.78);padding:2px 6px;border-radius:2px;white-space:nowrap;">SCAQMD AQ ADVISORY — East LA / SGV</div>`,iconAnchor:[0,0]}),interactive:false
   }).addTo(aqGrp);
 }
 
-function drawShelters(){
+function drawShelters() {
   shelterGrp.clearLayers();
-  const shelterIcon=L.divIcon({className:'',html:`<div style="width:14px;height:14px;border-radius:50%;border:2px solid #00e676;background:rgba(0,230,118,.3);box-shadow:0 0 8px #00e676;"></div>`,iconSize:[14,14],iconAnchor:[7,7]});
-
-  const shelters=[
-    {name:'Pecan Recreation Center',addr:'145 S. Pecan St, Los Angeles, CA 90033',lat:34.0471,lng:-118.2012,status:'🟢 Open 24hrs',phone:'311'},
-    {name:'City Terrace Park',addr:'1126 N. Hazard Ave, Los Angeles, CA 90063',lat:34.0502,lng:-118.1840,status:'🟢 Open 24hrs',phone:'311'},
-  ];
-
-  shelters.forEach(s=>{
-    L.marker([s.lat,s.lng],{icon:shelterIcon,zIndexOffset:500})
-    .bindPopup(`<b style="color:#00e676">🏫 ${s.name}</b><br>${s.addr}<br><b>${s.status}</b><br>📞 ${s.phone}`)
+  const icon=L.divIcon({className:'',html:`<div style="width:14px;height:14px;border-radius:50%;border:2px solid #00e676;background:rgba(0,230,118,.3);box-shadow:0 0 8px #00e676;"></div>`,iconSize:[14,14],iconAnchor:[7,7]});
+  [
+    {name:'Pecan Recreation Center',addr:'145 S. Pecan St, LA 90033',lat:34.0471,lng:-118.2012,status:'🟢 Open 24hrs'},
+    {name:'City Terrace Park',addr:'1126 N. Hazard Ave, LA 90063',lat:34.0502,lng:-118.1840,status:'🟢 Open 24hrs'},
+  ].forEach(s=>{
+    L.marker([s.lat,s.lng],{icon,zIndexOffset:500})
+    .bindPopup(`<b style="color:#00e676">🏫 ${s.name}</b><br>${s.addr}<br><b>${s.status}</b><br>📞 311`)
     .addTo(shelterGrp);
-    L.marker([s.lat,s.lng],{icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#00e676;background:rgba(10,12,15,.8);padding:2px 5px;border:1px solid #00e67640;border-radius:3px;white-space:nowrap;margin-left:10px;margin-top:-5px;">${s.name}<br>${s.status}</div>`,iconAnchor:[-2,7]}),interactive:false}).addTo(shelterGrp);
+    L.marker([s.lat,s.lng],{icon:L.divIcon({className:'',html:`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#00e676;background:rgba(10,12,15,.8);padding:2px 5px;border:1px solid #00e67640;border-radius:3px;white-space:nowrap;margin-left:10px;margin-top:-5px;">${s.name} · ${s.status}</div>`,iconAnchor:[-2,7]}),interactive:false}).addTo(shelterGrp);
   });
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════════
-function miStr(m){return (m/1609).toFixed(1)+' mi';}
+// ═══════════════════════════════════════════════════
+function miStr(m){return (m/1609).toFixed(2)+' mi';}
 function bearingToCompass(deg){if(deg==null)return '?';const d=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];return d[Math.round(deg/22.5)%16];}
 
-function updateUI(p){
+function updateUI(p) {
   const safe=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  safe('d-heavy',miStr(p.heavy));
-  safe('d-mod',miStr(p.mod));
-  safe('d-light',miStr(p.light));
-  safe('d-haze',miStr(p.haze));
-  safe('ls-heavy',miStr(p.heavy));
-  safe('ls-mod',miStr(p.mod));
-  safe('ls-light',miStr(p.light));
-  safe('ls-haze',miStr(p.haze));
+  safe('d-haz',  miStr(p.haz));
+  safe('d-vun',  miStr(p.vun));
+  safe('d-unh',  miStr(p.unh));
+  safe('d-sen',  miStr(p.sen));
+  safe('d-haze', miStr(p.haze));
+  safe('ls-haz',  miStr(p.haz));
+  safe('ls-vun',  miStr(p.vun));
+  safe('ls-unh',  miStr(p.unh));
+  safe('ls-sen',  miStr(p.sen));
+  safe('ls-haze', miStr(p.haze));
+  safe('s-effh',  Math.round(p.He)+'m above ground');
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // MAIN SLIDE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 function onSlide(){
-  const wind=+document.getElementById('sl-wind').value;
-  const intensity=+document.getElementById('sl-intensity').value;
-  const intensityLabel=['','Low','Medium','High'][intensity];
+  const wind = +document.getElementById('sl-wind').value;
+  const intensity = +document.getElementById('sl-intensity').value;
+  const stabilityIdx = +document.getElementById('sl-stability').value - 1;
+  const stabilityKey = STABILITY_KEYS[stabilityIdx];
 
-  document.getElementById('lbl-wind').textContent=wind;
-  document.getElementById('lbl-intensity').textContent=intensityLabel;
-  document.getElementById('s-wspd').textContent=wind+' mph';
+  document.getElementById('lbl-wind').textContent = wind;
+  document.getElementById('lbl-intensity').textContent = ['','Low','Medium','High'][intensity];
+  document.getElementById('lbl-stability').textContent = STABILITY_LABELS[stabilityIdx];
+  document.getElementById('s-wspd').textContent = wind + ' mph';
 
-  const p=calcSmokePlume(wind,intensity);
+  const p = calcPlume(wind, intensity, stabilityKey);
   updateUI(p);
-  if(state.plume)drawPlume(p);else plumeGrp.clearLayers();
-  if(state.aqzone)drawAQZone();else aqGrp.clearLayers();
-  if(state.shelters)drawShelters();else shelterGrp.clearLayers();
+  if(state.source) drawFireSource(); else sourceGrp.clearLayers();
+  if(state.plume)  drawPlume(p, stabilityKey); else plumeGrp.clearLayers();
+  if(state.aqzone) drawAQZone(); else aqGrp.clearLayers();
+  if(state.shelters) drawShelters(); else shelterGrp.clearLayers();
 }
 
-// ═══════════════════════════════════════════
-// WEATHER — NWS stations near Boyle Heights
-// KBUR (Burbank), KLAX (LAX), KSMO (Santa Monica)
-// ═══════════════════════════════════════════
-let forecastHours=[];
+// ═══════════════════════════════════════════════════
+// WEATHER — KCQT (Downtown LA / Dodger Stadium, 1.8mi NW)
+// → KBUR (Burbank, 8mi N) → KLAX (12mi SW) → Open-Meteo
+// ═══════════════════════════════════════════════════
+let forecastHours = [];
 
 function applyWeatherHour(idx){
-  if(!forecastHours.length)return;
-  const h=forecastHours[Math.min(idx,forecastHours.length-1)];
-  const clamped=Math.min(40,Math.max(2,h.wsMph));
-  window.LIVE_WIND_BEARING=(h.wdDeg+180)%360;
-  const cF=bearingToCompass(h.wdDeg),cT=bearingToCompass(window.LIVE_WIND_BEARING);
-  const label=idx===0?'Now':'+'+idx+'h ('+h.timeLabel+')';
-  document.getElementById('sl-wind').value=clamped;
-  document.getElementById('lbl-wind').textContent=clamped;
-  document.getElementById('s-wspd').textContent=clamped+' mph';
-  document.getElementById('s-plumedir').textContent=cF+' → '+cT;
-  document.getElementById('wb-dir').textContent=cF+' → '+cT;
-  document.getElementById('wb-spd').textContent=clamped+' mph';
-  document.getElementById('wb-gust').textContent=h.wgMph+' mph';
-  document.getElementById('wb-src').textContent=idx===0?h.src||'live':'fcst '+label;
-  document.getElementById('lbl-fcast').textContent=label;
-  const fd=document.getElementById('fcast-detail');
-  if(fd)fd.textContent=h.wsMph+' mph from '+cF+', gusts '+h.wgMph+' mph';
+  if(!forecastHours.length) return;
+  const h = forecastHours[Math.min(idx, forecastHours.length-1)];
+  const clamped = Math.min(30, Math.max(1, h.wsMph));
+  window.LIVE_WIND_BEARING = (h.wdDeg + 180) % 360;
+  const cF = bearingToCompass(h.wdDeg), cT = bearingToCompass(window.LIVE_WIND_BEARING);
+  const label = idx===0 ? 'Now' : '+'+idx+'h ('+h.timeLabel+')';
+  document.getElementById('sl-wind').value = clamped;
+  document.getElementById('lbl-wind').textContent = clamped;
+  document.getElementById('s-wspd').textContent = clamped + ' mph';
+  document.getElementById('s-wdir').textContent = cF + ' (from)';
+  document.getElementById('s-plumedir').textContent = cF + ' → ' + cT;
+  document.getElementById('wb-dir').textContent = cF + ' → ' + cT;
+  document.getElementById('wb-spd').textContent = clamped + ' mph';
+  document.getElementById('wb-gust').textContent = (h.wgMph||clamped) + ' mph';
+  document.getElementById('wb-src').textContent = h.src || 'live';
+  document.getElementById('s-wsrc').textContent = h.src || 'live';
+  document.getElementById('lbl-fcast').textContent = label;
+  const fd = document.getElementById('fcast-detail');
+  if(fd) fd.textContent = h.wsMph + ' mph from ' + cF + ', gusts ' + (h.wgMph||h.wsMph) + ' mph';
   onSlide();
 }
 
-function onForecastSlide(){applyWeatherHour(+document.getElementById('sl-fcast').value);}
+function onForecastSlide(){ applyWeatherHour(+document.getElementById('sl-fcast').value); }
 
 async function fetchWeather(silent){
   const btn=document.getElementById('btn-live');
@@ -426,45 +578,42 @@ async function fetchWeather(silent){
   if(!silent){btn.classList.add('loading');btn.textContent='⟳ Fetching…';}
   status.className='';status.textContent='';
 
-  // NWS stations near Boyle Heights
   const nwsStations=[
-    {id:'KBUR',name:'KBUR Burbank Airport',dist:'8mi N'},
-    {id:'KLAX',name:'KLAX LAX Airport',dist:'12mi SW'},
-    {id:'KSMO',name:'KSMO Santa Monica',dist:'15mi W'},
+    {id:'KCQT', name:'KCQT Dodger Stadium area', dist:'1.8mi NW'},
+    {id:'KBUR', name:'KBUR Burbank Airport',     dist:'8mi N'},
+    {id:'KLAX', name:'KLAX LAX Airport',          dist:'12mi SW'},
   ];
 
   for(const st of nwsStations){
     try{
-      const resp=await fetch(`https://api.weather.gov/stations/${st.id}/observations/latest`,{headers:{'User-Agent':'BH-FireSim/1.0','Accept':'application/geo+json'}});
-      if(!resp.ok)throw new Error('HTTP '+resp.status);
+      const resp=await fetch(`https://api.weather.gov/stations/${st.id}/observations/latest`,{headers:{'User-Agent':'BH-FireSim/2.0','Accept':'application/geo+json'}});
+      if(!resp.ok) throw new Error('HTTP '+resp.status);
       const data=await resp.json();
       const props=data.properties;
-      const wsMs=props.windSpeed?.value,wdDeg=props.windDirection?.value,wgMs=props.windGust?.value;
-      if(wsMs==null||wdDeg==null)throw new Error('no wind data');
+      const wsMs=props.windSpeed?.value, wdDeg=props.windDirection?.value, wgMs=props.windGust?.value;
+      if(wsMs==null||wdDeg==null) throw new Error('no wind data');
       const wsMph=Math.round(wsMs*2.23694);
-      if(wsMph>80||wsMph<0)throw new Error('implausible: '+wsMph);
+      if(wsMph>60||wsMph<0) throw new Error('implausible: '+wsMph);
       const obsTime=new Date(props.timestamp);
       const minsAgo=Math.round((Date.now()-obsTime)/60000);
-      if(minsAgo>45)throw new Error('stale: '+minsAgo+'min');
-      const wgMph=wgMs?Math.round(wgMs*2.23694):wsMph;
+      if(minsAgo>45) throw new Error('stale: '+minsAgo+'min');
+      const wgMph=wgMs?Math.round(wgMs*2.23694):null;
 
-      forecastHours=[{wsMph,wdDeg,wgMph,timeLabel:'Now',src:`${st.id} · ${st.dist} · ${minsAgo}min ago`}];
+      forecastHours=[{wsMph,wdDeg,wgMph:wgMph||wsMph,timeLabel:'Now',src:`${st.id} · ${st.dist} · ${minsAgo}min ago`}];
       await fillForecastFromOpenMeteo();
-      forecastHours[0]={wsMph,wdDeg,wgMph,timeLabel:'Now',src:`${st.id} · ${st.dist} · ${minsAgo}min ago`};
-
+      forecastHours[0]={wsMph,wdDeg,wgMph:wgMph||wsMph,timeLabel:'Now',src:`${st.id} · ${st.dist} · ${minsAgo}min ago`};
       document.getElementById('forecast-row').style.display='';
       document.getElementById('sl-fcast').value=0;
       applyWeatherHour(0);
-      if(!silent){status.className='ok';status.textContent=`✓ ${wsMph}mph from ${bearingToCompass(wdDeg)} · ${st.name}`;}
+      if(!silent){status.className='ok';status.textContent=`✓ ${wsMph}mph from ${bearingToCompass(wdDeg)} · ${st.name} (${minsAgo}min ago)`;}
       btn.classList.remove('loading');btn.textContent='⟳ Live weather';
       return;
     }catch(e){console.warn(st.id+' skipped:',e.message);}
   }
 
-  // Fallback: Open-Meteo at fire location
   try{
     await fetchFromOpenMeteo();
-    if(!silent){const h=forecastHours[0];status.className='ok';status.textContent=`✓ ${h.wsMph}mph from ${bearingToCompass(h.wdDeg)} · open-meteo`;}
+    if(!silent){const h=forecastHours[0];status.className='ok';status.textContent=`✓ ${h.wsMph}mph from ${bearingToCompass(h.wdDeg)} · open-meteo (model)`;}
   }catch(e){
     status.className='err';status.textContent='✗ All weather sources failed';
     if(silent)document.getElementById('wb-src').textContent='weather unavailable';
@@ -475,19 +624,19 @@ async function fillForecastFromOpenMeteo(){
   const url='https://api.open-meteo.com/v1/forecast?latitude=34.0305&longitude=-118.2108&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=mph&timezone=America%2FLos_Angeles&forecast_days=2';
   const resp=await fetch(url);if(!resp.ok)return;
   const data=await resp.json();
-  const now=new Date(),ch=now.getHours(),times=data.hourly.time,speeds=data.hourly.wind_speed_10m,dirs=data.hourly.wind_direction_10m,gusts=data.hourly.wind_gusts_10m;
+  const now=new Date(),ch=now.getHours(),times=data.hourly.time,spd=data.hourly.wind_speed_10m,dir=data.hourly.wind_direction_10m,gst=data.hourly.wind_gusts_10m;
   let si=0;for(let i=0;i<times.length;i++){const t=new Date(times[i]);if(t.getHours()===ch&&t.getDate()===now.getDate()){si=i;break;}}
-  for(let i=1;i<=10;i++){const idx=si+i,t=new Date(times[idx]),hr=t.getHours(),ampm=hr>=12?'PM':'AM',hr12=hr%12||12;forecastHours.push({wsMph:Math.round(speeds[idx]),wdDeg:dirs[idx],wgMph:Math.round(gusts[idx]),timeLabel:hr12+ampm,src:'open-meteo fcst'});}
+  for(let i=1;i<=10;i++){const idx=si+i,t=new Date(times[idx]),hr=t.getHours(),ap=hr>=12?'PM':'AM',h12=hr%12||12;forecastHours.push({wsMph:Math.round(spd[idx]),wdDeg:dir[idx],wgMph:Math.round(gst[idx]),timeLabel:h12+ap,src:'open-meteo fcst'});}
 }
 
 async function fetchFromOpenMeteo(){
   const url='https://api.open-meteo.com/v1/forecast?latitude=34.0305&longitude=-118.2108&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=mph&timezone=America%2FLos_Angeles&forecast_days=2';
   const resp=await fetch(url);if(!resp.ok)throw new Error('open-meteo '+resp.status);
   const data=await resp.json();
-  const now=new Date(),ch=now.getHours(),times=data.hourly.time,speeds=data.hourly.wind_speed_10m,dirs=data.hourly.wind_direction_10m,gusts=data.hourly.wind_gusts_10m;
+  const now=new Date(),ch=now.getHours(),times=data.hourly.time,spd=data.hourly.wind_speed_10m,dir=data.hourly.wind_direction_10m,gst=data.hourly.wind_gusts_10m;
   let si=0;for(let i=0;i<times.length;i++){const t=new Date(times[i]);if(t.getHours()===ch&&t.getDate()===now.getDate()){si=i;break;}}
   forecastHours=[];
-  for(let i=0;i<=10;i++){const idx=si+i,t=new Date(times[idx]),hr=t.getHours(),ampm=hr>=12?'PM':'AM',hr12=hr%12||12;forecastHours.push({wsMph:Math.round(speeds[idx]),wdDeg:dirs[idx],wgMph:Math.round(gusts[idx]),timeLabel:hr12+ampm,src:'open-meteo'});}
+  for(let i=0;i<=10;i++){const idx=si+i,t=new Date(times[idx]),hr=t.getHours(),ap=hr>=12?'PM':'AM',h12=hr%12||12;forecastHours.push({wsMph:Math.round(spd[idx]),wdDeg:dir[idx],wgMph:Math.round(gst[idx]),timeLabel:h12+ap,src:'open-meteo'});}
   forecastHours[0]={wsMph:Math.round(data.current.wind_speed_10m),wdDeg:data.current.wind_direction_10m,wgMph:Math.round(data.current.wind_gusts_10m),timeLabel:'Now',src:'open-meteo (live)'};
   document.getElementById('forecast-row').style.display='';
   document.getElementById('sl-fcast').value=0;
@@ -495,17 +644,13 @@ async function fetchFromOpenMeteo(){
   document.getElementById('wb-src').textContent='open-meteo (model)';
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════
-document.getElementById('wb-dir').textContent='…';
-document.getElementById('wb-spd').textContent='loading';
-document.getElementById('wb-gust').textContent='…';
-document.getElementById('wb-src').textContent='fetching KBUR…';
-
+// ═══════════════════════════════════════════════════
+document.getElementById('wb-src').textContent='fetching KCQT…';
+drawFireSource();
 drawAQZone();
 drawShelters();
-
 setTimeout(()=>{map.invalidateSize();},100);
 fetchWeather(true).catch(()=>onSlide());
 </script>
