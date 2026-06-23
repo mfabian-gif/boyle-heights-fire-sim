@@ -211,14 +211,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 // Lineage warehouse: ~700ft × 700ft (500k sq ft)
 // Center: 34.0305°N, -118.2108°W
 // ═══════════════════════════════════════════════════
-const FIRE_CENTER = [34.0154, -118.1935]; // 1400 S Los Palos St — 34°00'55.5"N 118°11'36.6"W
+const FIRE_CENTER = [34.0175, -118.2148]; // 3809 Union Pacific Ave, Los Angeles CA 90023
 // Warehouse corners (approximate, ~700ft each side = ~213m)
 const HALF_W = 213; // metres
 
 // ═══════════════════════════════════════════════════
 // MAP
 // ═══════════════════════════════════════════════════
-const map = L.map('map',{center:[34.022,-118.193],zoom:12,zoomControl:true});
+const map = L.map('map',{center:[34.020,-118.215],zoom:12,zoomControl:true});
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:19}).addTo(map);
 
 const sourceGrp=L.layerGroup().addTo(map);
@@ -598,7 +598,7 @@ async function fetchWeather(silent){
 }
 
 async function fillForecastFromOpenMeteo(){
-  const url='https://api.open-meteo.com/v1/forecast?latitude=34.0154&longitude=-118.1935&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=mph&timezone=America%2FLos_Angeles&forecast_days=2';
+  const url='https://api.open-meteo.com/v1/forecast?latitude=34.0175&longitude=-118.2148&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=mph&timezone=America%2FLos_Angeles&forecast_days=2';
   const resp=await fetch(url);if(!resp.ok)return;
   const data=await resp.json();
   const now=new Date(),ch=now.getHours(),times=data.hourly.time,spd=data.hourly.wind_speed_10m,dir=data.hourly.wind_direction_10m,gst=data.hourly.wind_gusts_10m;
@@ -607,7 +607,7 @@ async function fillForecastFromOpenMeteo(){
 }
 
 async function fetchFromOpenMeteo(){
-  const url='https://api.open-meteo.com/v1/forecast?latitude=34.0154&longitude=-118.1935&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=mph&timezone=America%2FLos_Angeles&forecast_days=2';
+  const url='https://api.open-meteo.com/v1/forecast?latitude=34.0175&longitude=-118.2148&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=mph&timezone=America%2FLos_Angeles&forecast_days=2';
   const resp=await fetch(url);if(!resp.ok)throw new Error('open-meteo '+resp.status);
   const data=await resp.json();
   const now=new Date(),ch=now.getHours(),times=data.hourly.time,spd=data.hourly.wind_speed_10m,dir=data.hourly.wind_direction_10m,gst=data.hourly.wind_gusts_10m;
